@@ -47,6 +47,7 @@ void HuffCode::setWeights(const unordered_map<char, int>& theweights)
     root = std::make_shared<Node>(pq.top());
     if (theweights.size() == 1) {
         root->left = std::make_shared<Node>(pq.top());
+        root->right = std::make_shared<Node>(pq.top());
     }
     code(root, "");
 }
@@ -83,22 +84,21 @@ string HuffCode::encode(const string& text) const
 
 string HuffCode::decode(const string& codestr) const
 {
+
     string decodedAnswer = "";
     auto tracker = root;
     for (auto i : codestr) {
-        if (tracker->left) {
-            if (i == 1) {
-                tracker = tracker->right;
-            }
-            else {
-                tracker = tracker->left;
-            }
+
+        if (i == '1') {
+            tracker = tracker->right;
         }
         else {
+            tracker = tracker->left;
+        }
+        if ((!tracker->left) && (!tracker->right)) {
             decodedAnswer += tracker->letter;
             tracker = root;
         }
-
     }
     return decodedAnswer;
 }
